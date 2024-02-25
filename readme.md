@@ -34,7 +34,7 @@ go build -o goshell
 Run the shell:
 
 ```bash
-./myshell
+./goshell
 ```
 
 ## Usage
