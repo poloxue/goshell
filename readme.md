@@ -21,14 +21,14 @@ Ensure you have Go installed on your system. This project was developed using Go
 Clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/custom-shell-go.git
-cd custom-shell-go
+git clone https://github.com/poloxue/goshell.git
+cd goshell
 ```
 
 Build the shell from source:
 
 ```bash
-go build -o myshell
+go build -o goshell
 ```
 
 Run the shell:
