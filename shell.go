@@ -9,7 +9,6 @@ import (
 )
 
 func CmdSplitFunc(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	// 如果已经到了数据的结尾，但没有数据，则返回
 	if atEOF && len(data) == 0 {
 		return 0, nil, nil
 	}
@@ -28,18 +27,15 @@ func CmdSplitFunc(data []byte, atEOF bool) (advance int, token []byte, err error
 			}
 		case '\n':
 			if !inSingleQuote && !inDoubleQuote {
-				// 返回遇到的第一个未被引号包裹的换行符
 				return i + 1, data[:i], nil
 			}
 		}
 	}
 
-	// 如果我们处于文件末尾并且还有数据，返回剩余的数据
 	if atEOF {
 		return len(data), data, nil
 	}
 
-	// 如果没有找到换行符，请求更多的数据
 	return 0, nil, nil
 }
 
@@ -63,30 +59,21 @@ func (s *Shell) RegisterBuiltinCmd(cmdName string, cmd BuiltinCmder) {
 }
 
 func (s *Shell) PrintPrompt() {
-	// 获取当前工作目录
 	cwd, err := os.Getwd()
 	if err != nil {
-		// 如果无法获取工作目录，打印错误并使用默认提示符
-		fmt.Println("Error getting current directory:", err)
-		fmt.Print("$ ")
-		return
-	}
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Println("Error getting home directory:", err)
+			fmt.Print("$ ")
+			return
+		}
 
-	// 获取当前用户的HOME目录
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("Error getting home directory:", err)
-		fmt.Print("$ ")
-		return
-	}
+		if strings.HasPrefix(cwd, homeDir) {
+			cwd = strings.Replace(cwd, homeDir, "~", 1)
+		}
 
-	// 如果当前工作目录以HOME目录开头，则用'~'替换掉HOME目录部分
-	if strings.HasPrefix(cwd, homeDir) {
-		cwd = strings.Replace(cwd, homeDir, "~", 1)
+		fmt.Printf("[%s]$ ", cwd)
 	}
-
-	// 打印包含当前工作目录的提示符
-	fmt.Printf("[%s]$ ", cwd)
 }
 
 func (s *Shell) ReadInput() (string, error) {
