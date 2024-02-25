@@ -1,4 +1,4 @@
-# Build Your Own Shell in Go
+# Shell in Go
 
 This project is a simple, custom shell implemented in Go. It aims to provide a basic understanding of how shells operate, including parsing commands, handling input/output, and executing system commands. This shell supports basic command execution, along with built-in commands for navigating the filesystem.
 
