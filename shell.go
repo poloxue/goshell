@@ -61,19 +61,23 @@ func (s *Shell) RegisterBuiltinCmd(cmdName string, cmd BuiltinCmder) {
 func (s *Shell) PrintPrompt() {
 	cwd, err := os.Getwd()
 	if err != nil {
-		homeDir, err := os.UserHomeDir()
-		if err != nil {
-			fmt.Println("Error getting home directory:", err)
-			fmt.Print("$ ")
-			return
-		}
-
-		if strings.HasPrefix(cwd, homeDir) {
-			cwd = strings.Replace(cwd, homeDir, "~", 1)
-		}
-
-		fmt.Printf("[%s]$ ", cwd)
+		fmt.Println("Error getting current directory:", err)
+		fmt.Print("$ ")
+		return
 	}
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory:", err)
+		fmt.Print("$ ")
+		return
+	}
+
+	if strings.HasPrefix(cwd, homeDir) {
+		cwd = strings.Replace(cwd, homeDir, "~", 1)
+	}
+
+	fmt.Printf("[%s]$ ", cwd)
 }
 
 func (s *Shell) ReadInput() (string, error) {
@@ -95,7 +99,6 @@ func (s *Shell) ParseInput(input string) []*CmdRequest {
 	subInputs := strings.Split(input, ";")
 
 	cmdRequests := make([]*CmdRequest, 0, len(subInputs))
-	fmt.Println(subInputs)
 	for _, subInput := range subInputs {
 		subInput = strings.Trim(subInput, " ")
 		subInput = strings.TrimSuffix(subInput, "\n")
